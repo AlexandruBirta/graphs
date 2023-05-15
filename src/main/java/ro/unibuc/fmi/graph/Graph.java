@@ -1,5 +1,6 @@
 package ro.unibuc.fmi.graph;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.Map;
 
 
 public class Graph {
+
     private Map<Vertex, List<Vertex>> adjVertices;
 
     public Graph() {
@@ -45,18 +47,44 @@ public class Graph {
         return adjVertices.get(new Vertex(label));
     }
 
-    public String printGraph() {
+    public int findDegree(String label) {
+        return adjVertices.get(new Vertex(label)).size();
+    }
+
+    public boolean areVerticesAdjacent(String label1, String label2) {
+        return adjVertices.get(new Vertex(label1)).contains(new Vertex(label2));
+    }
+
+    public String printEdges() {
+
         StringBuffer sb = new StringBuffer();
-        for(Vertex v : adjVertices.keySet()) {
-            sb.append(v);
-            sb.append(adjVertices.get(v));
-            sb.append('\n');
+
+        for (Vertex v : adjVertices.keySet()) {
+            for (Vertex w : adjVertices.get(v)) {
+                sb.append(v).append(" ").append(w).append('\n');
+            }
         }
+
         return sb.toString();
+
+    }
+
+    public String printGraph() {
+
+        StringBuffer sb = new StringBuffer();
+
+        for (Vertex v : adjVertices.keySet()) {
+            sb.append(v).append(adjVertices.get(v)).append('\n');
+        }
+
+        return sb.toString();
+
     }
 
     class Vertex {
+
         String label;
+
         Vertex(String label) {
             this.label = label;
         }
@@ -98,6 +126,7 @@ public class Graph {
         private Graph getOuterType() {
             return Graph.this;
         }
+
     }
 
 }

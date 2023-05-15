@@ -39,7 +39,6 @@ public class Main {
             System.out.println("DFS: " + GraphTraversal.depthFirstTraversal(graph, "2"));
             System.out.println("BFS: " + GraphTraversal.breadthFirstTraversal(graph, "2"));
 
-
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

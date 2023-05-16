@@ -19,6 +19,7 @@ public class Main {
             Graph graph = new Graph();
 
             graph.setDirected(false);
+            graph.setWeighted(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
@@ -32,10 +33,6 @@ public class Main {
             for (int i = 1; i <= numberOfEdges; i++) {
 
                 String[] edge = reader.readLine().trim().split("\\s+");
-
-                if (edge.length == 3) {
-                    graph.setWeighted(true);
-                }
 
                 if (graph.isWeighted()) {
                     graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(String.valueOf(edge[2])));

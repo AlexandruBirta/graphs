@@ -50,7 +50,7 @@ public class Graph {
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
 
-        if(!isDirected) {
+        if (!isDirected) {
             adjVertices.get(v2).add(v1);
         }
 
@@ -62,7 +62,7 @@ public class Graph {
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
 
-        if(!isDirected) {
+        if (!isDirected) {
             adjVertices.get(v2).add(v1);
         }
 
@@ -109,7 +109,7 @@ public class Graph {
 
         for (Vertex v : adjVertices.keySet()) {
             for (Vertex w : adjVertices.get(v)) {
-                if(isWeighted) {
+                if (isWeighted) {
                     sb.append(v).append(" ").append(w).append(" weight ").append(weights.get(v).get(w)).append('\n');
                 } else {
                     sb.append(v).append(" ").append(w).append('\n');
@@ -186,5 +186,6 @@ public class Graph {
         return visited;
 
     }
+
 
 }

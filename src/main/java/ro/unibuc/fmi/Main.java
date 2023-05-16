@@ -20,24 +20,26 @@ public class Main {
             Graph graph = new Graph();
 
 
-            String graphProperties = reader.readLine();
+            String[] graphProperties = reader.readLine().trim().split("\\s+");
 
-            int numberOfVertices = Integer.parseInt(String.valueOf(graphProperties.charAt(0)));
-            int numberOfEdges = Integer.parseInt(String.valueOf(graphProperties.charAt(2)));
+            int numberOfVertices = Integer.parseInt(graphProperties[0]);
+            int numberOfEdges = Integer.parseInt(String.valueOf(graphProperties[1]));
 
             for (int i = 1; i <= numberOfVertices; i++) {
-                graph.addVertex(String.valueOf(i));
+                graph.addVertex(Integer.valueOf(i));
             }
 
             for (int i = 1; i <= numberOfEdges; i++) {
-                String edges = reader.readLine();
-
-                graph.addEdge(String.valueOf(edges.charAt(0)), String.valueOf(edges.charAt(2)));
+                String[] edge = reader.readLine().trim().split("\\s+");
+                graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(String.valueOf(edge[2])));
             }
 
             System.out.println(graph.printGraph());
-            System.out.println("DFS: " + GraphTraversal.depthFirstTraversal(graph, "2"));
-            System.out.println("BFS: " + GraphTraversal.breadthFirstTraversal(graph, "2"));
+            System.out.println('\n');
+            System.out.println(graph.printEdges());
+
+            System.out.println("DFS: " + GraphTraversal.depthFirstTraversal(graph, 2));
+            System.out.println("BFS: " + GraphTraversal.breadthFirstTraversal(graph, 2));
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

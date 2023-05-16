@@ -9,30 +9,40 @@ import java.util.Map;
 
 public class Graph {
 
-    private Map<Vertex, List<Vertex>> adjVertices;
+    private final Map<Vertex, List<Vertex>> adjVertices;
+    private final Map<Vertex, Map<Vertex, Double>> weights = new HashMap<>();
 
     public Graph() {
         this.adjVertices = new HashMap<>();
     }
 
-    public void addVertex(String label) {
+    public void addVertex(Integer label) {
         adjVertices.putIfAbsent(new Vertex(label), new ArrayList<>());
     }
 
-    public void removeVertex(String label) {
+    public void removeVertex(Integer label) {
         Vertex v = new Vertex(label);
         adjVertices.values().forEach(e -> e.remove(v));
         adjVertices.remove(new Vertex(label));
     }
 
-    public void addEdge(String label1, String label2) {
+    public void addEdge(Integer label1, Integer label2, double weight) {
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
         adjVertices.get(v2).add(v1);
+        setWeight(v1, v2, weight);
     }
 
-    public void removeEdge(String label1, String label2) {
+    private void setWeight(Vertex one, Vertex two, double weight) {
+        weights.computeIfAbsent(one, key -> new HashMap<>());
+        weights.computeIfAbsent(two, key -> new HashMap<>());
+
+        weights.get(one).put(two, weight);
+        weights.get(two).put(one, weight);
+    }
+
+    public void removeEdge(Integer label1, Integer label2) {
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         List<Vertex> eV1 = adjVertices.get(v1);
@@ -43,25 +53,25 @@ public class Graph {
             eV2.remove(v1);
     }
 
-    public List<Vertex> getAdjVertices(String label) {
+    public List<Vertex> getAdjVertices(Integer label) {
         return adjVertices.get(new Vertex(label));
     }
 
-    public int findDegree(String label) {
+    public int findDegree(Integer label) {
         return adjVertices.get(new Vertex(label)).size();
     }
 
-    public boolean areVerticesAdjacent(String label1, String label2) {
+    public boolean areVerticesAdjacent(Integer label1, Integer label2) {
         return adjVertices.get(new Vertex(label1)).contains(new Vertex(label2));
     }
 
     public String printEdges() {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (Vertex v : adjVertices.keySet()) {
             for (Vertex w : adjVertices.get(v)) {
-                sb.append(v).append(" ").append(w).append('\n');
+                sb.append(v).append(" ").append(w).append(" weight ").append(weights.get(v).get(w)).append('\n');
             }
         }
 
@@ -71,7 +81,7 @@ public class Graph {
 
     public String printGraph() {
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
         for (Vertex v : adjVertices.keySet()) {
             sb.append(v).append(adjVertices.get(v)).append('\n');
@@ -83,9 +93,9 @@ public class Graph {
 
     class Vertex {
 
-        String label;
+        Integer label;
 
-        Vertex(String label) {
+        Vertex(Integer label) {
             this.label = label;
         }
 
@@ -119,9 +129,8 @@ public class Graph {
 
         @Override
         public String toString() {
-            return label;
+            return label.toString();
         }
-
 
         private Graph getOuterType() {
             return Graph.this;

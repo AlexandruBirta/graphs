@@ -6,16 +6,16 @@ import java.util.*;
 
 public class GraphTraversal {
 
-    public static Set<String> depthFirstTraversal(Graph graph, String root) {
+    public static Set<Integer> depthFirstTraversal(Graph graph, Integer root) {
 
-        Set<String> visited = new LinkedHashSet<>();
-        Stack<String> stack = new Stack<>();
+        Set<Integer> visited = new LinkedHashSet<>();
+        Stack<Integer> stack = new Stack<>();
 
         stack.push(root);
 
         while (!stack.isEmpty()) {
 
-            String vertex = stack.pop();
+            Integer vertex = stack.pop();
 
             if (!visited.contains(vertex)) {
 
@@ -33,17 +33,17 @@ public class GraphTraversal {
 
     }
 
-    public static Set<String> breadthFirstTraversal(Graph graph, String root) {
+    public static Set<Integer> breadthFirstTraversal(Graph graph, Integer root) {
 
-        Set<String> visited = new LinkedHashSet<>();
-        Queue<String> queue = new LinkedList<>();
+        Set<Integer> visited = new LinkedHashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
 
         queue.add(root);
         visited.add(root);
 
         while (!queue.isEmpty()) {
 
-            String vertex = queue.poll();
+            Integer vertex = queue.poll();
 
             for (Graph.Vertex v : graph.getAdjVertices(vertex)) {
 

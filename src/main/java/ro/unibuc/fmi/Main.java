@@ -18,6 +18,8 @@ public class Main {
 
             Graph graph = new Graph();
 
+            graph.setDirected(false);
+
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
             int numberOfVertices = Integer.parseInt(graphProperties[0]);
@@ -47,8 +49,8 @@ public class Main {
             System.out.println('\n');
             System.out.println(graph.printEdges());
 
-            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 2));
-            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 2));
+            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
+            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

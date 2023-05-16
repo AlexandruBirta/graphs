@@ -9,13 +9,23 @@ public class Graph {
     private final Map<Vertex, List<Vertex>> adjVertices;
     private final Map<Vertex, Map<Vertex, Double>> weights = new HashMap<>();
 
+    private boolean isDirected;
+
     private boolean isWeighted;
 
     public Graph() {
         this.adjVertices = new HashMap<>();
         this.isWeighted = false;
+        this.isDirected = false;
     }
 
+    public boolean isDirected() {
+        return isDirected;
+    }
+
+    public void setDirected(boolean directed) {
+        isDirected = directed;
+    }
 
     public boolean isWeighted() {
         return isWeighted;
@@ -39,7 +49,11 @@ public class Graph {
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
-        adjVertices.get(v2).add(v1);
+
+        if(!isDirected) {
+            adjVertices.get(v2).add(v1);
+        }
+
         setWeight(v1, v2, weight);
     }
 
@@ -47,7 +61,11 @@ public class Graph {
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
-        adjVertices.get(v2).add(v1);
+
+        if(!isDirected) {
+            adjVertices.get(v2).add(v1);
+        }
+
     }
 
     private void setWeight(Vertex one, Vertex two, double weight) {

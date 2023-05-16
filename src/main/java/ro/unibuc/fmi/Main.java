@@ -2,7 +2,6 @@ package ro.unibuc.fmi;
 
 
 import ro.unibuc.fmi.graph.Graph;
-import ro.unibuc.fmi.graph.GraphTraversal;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,27 +18,37 @@ public class Main {
 
             Graph graph = new Graph();
 
-
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
             int numberOfVertices = Integer.parseInt(graphProperties[0]);
             int numberOfEdges = Integer.parseInt(String.valueOf(graphProperties[1]));
 
             for (int i = 1; i <= numberOfVertices; i++) {
-                graph.addVertex(Integer.valueOf(i));
+                graph.addVertex(i);
             }
 
             for (int i = 1; i <= numberOfEdges; i++) {
+
                 String[] edge = reader.readLine().trim().split("\\s+");
-                graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(String.valueOf(edge[2])));
+
+                if (edge.length == 3) {
+                    graph.setWeighted(true);
+                }
+
+                if (graph.isWeighted()) {
+                    graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(String.valueOf(edge[2])));
+                } else {
+                    graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]));
+                }
+
             }
 
             System.out.println(graph.printGraph());
             System.out.println('\n');
             System.out.println(graph.printEdges());
 
-            System.out.println("DFS: " + GraphTraversal.depthFirstTraversal(graph, 2));
-            System.out.println("BFS: " + GraphTraversal.breadthFirstTraversal(graph, 2));
+            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 2));
+            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 2));
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

@@ -446,4 +446,114 @@ public class Graph {
 
     }
 
+    public List<Vertex> bHeuristicSearch(Vertex sourceVertex, Vertex targetVertex) {
+
+        Set<Vertex> visitedSource = new HashSet<>();
+        Set<Vertex> visitedTarget = new HashSet<>();
+
+        Queue<Vertex> queueSource = new LinkedList<>();
+        Queue<Vertex> queueTarget = new LinkedList<>();
+
+        Map<Vertex, Vertex> parentsSource = new HashMap<>();
+        Map<Vertex, Vertex> parentsTarget = new HashMap<>();
+
+        // Enqueue the source and target nodes and mark them as visited
+        queueSource.offer(sourceVertex);
+        visitedSource.add(sourceVertex);
+
+        queueTarget.offer(targetVertex);
+        visitedTarget.add(targetVertex);
+
+        while (!queueSource.isEmpty() && !queueTarget.isEmpty()) {
+
+            // Explore nodes from the source side
+            int sourceSize = queueSource.size();
+
+            for (int i = 0; i < sourceSize; i++) {
+
+                Vertex currentSource = queueSource.poll();
+
+                for (Vertex v : adjVertices.keySet()) {
+
+                    if (Objects.equals(v.label, currentSource.label)) {
+
+                        for (Vertex w : adjVertices.get(v)) {
+
+                            if (!visitedSource.contains(w)) {
+
+                                queueSource.offer(w);
+                                visitedSource.add(w);
+                                parentsSource.put(w, currentSource);
+
+                                if (visitedTarget.contains(w)) {
+                                    return reconstructBHeuristicPath(w, parentsSource, parentsTarget);
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+                // Explore nodes from the target side
+                int targetSize = queueTarget.size();
+
+                for (int j = 0; j < targetSize; j++) {
+
+                    Vertex currentTarget = queueTarget.poll();
+
+                    for (Vertex v : adjVertices.keySet()) {
+
+                        if (Objects.equals(v.label, currentSource.label)) {
+
+                            for (Vertex w : adjVertices.get(v)) {
+
+                                if (!visitedTarget.contains(w)) {
+                                    queueTarget.offer(w);
+                                    visitedTarget.add(w);
+                                    parentsTarget.put(w, currentTarget);
+
+                                    if (visitedSource.contains(w)) {
+                                        return reconstructBHeuristicPath(w, parentsSource, parentsTarget);
+                                    }
+
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return new ArrayList<>(); // No path found
+
+    }
+
+    public List<Vertex> reconstructBHeuristicPath(Vertex intersectionVertex, Map<Vertex, Vertex> parentsSource, Map<Vertex, Vertex> parentsTarget) {
+
+        List<Vertex> path = new ArrayList<>();
+        Vertex currentVertex = intersectionVertex;
+
+        while (currentVertex != null) {
+            path.add(currentVertex);
+            currentVertex = parentsSource.get(currentVertex);
+        }
+
+        currentVertex = parentsTarget.get(intersectionVertex);
+        while (currentVertex != null) {
+            path.add(0, currentVertex);
+            currentVertex = parentsTarget.get(currentVertex);
+        }
+
+        return path;
+    }
+
+
 }

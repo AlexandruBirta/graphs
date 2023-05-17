@@ -47,8 +47,6 @@ public class Main {
             System.out.println(graph.printGraph());
             System.out.println('\n');
 
-            System.out.println(graph.printEdges());
-
             //Dijkstra*********************************************************************
 
 //            graph.dijkstra(numberOfVertices, 0);
@@ -61,13 +59,13 @@ public class Main {
 
             //A star*********************************************************************
 
-//            List<Integer> path = graph.aStar(0, 4);
+//            List<Integer> aStarPath = graph.aStar(0, 4);
 //
-//            if (path.isEmpty()) {
+//            if (aStarPath.isEmpty()) {
 //                System.out.println("No path found.");
 //            } else {
 //                System.out.println("Path found!");
-//                for (int node : path) {
+//                for (int node : aStarPath) {
 //                    System.out.println(node);
 //                }
 //            }
@@ -75,16 +73,31 @@ public class Main {
             //Bidirectional Search*********************************************************************
 
 
-            Vertex sourceVertex = new Vertex(0);
-            Vertex targetVertex = new Vertex(4);
+//            Vertex sourceVertex = new Vertex(0);
+//            Vertex targetVertex = new Vertex(4);
+//
+//            List<Vertex> bidirectionalSearchPath = graph.bidirectionalSearch(sourceVertex, targetVertex);
+//
+//            if (bidirectionalSearchPath.isEmpty()) {
+//                System.out.println("No path found.");
+//            } else {
+//                System.out.println("Path found!");
+//                for (Vertex vertex : bidirectionalSearchPath) {
+//                    System.out.println("Visited Vertex: " + vertex.label);
+//                }
+//            }
 
-            List<Vertex> path = graph.bidirectionalSearch(sourceVertex, targetVertex);
+            //B Heuristic*********************************************************************
 
-            if (path.isEmpty()) {
+            Vertex sourceNode = new Vertex(0); // Choose the source node
+            Vertex targetNode = new Vertex(4); // Choose the target node
+            List<Vertex> bHeuristicPath = graph.bHeuristicSearch(sourceNode, targetNode);
+
+            if (bHeuristicPath.isEmpty()) {
                 System.out.println("No path found.");
             } else {
                 System.out.println("Path found!");
-                for (Vertex vertex : path) {
+                for (Vertex vertex : bHeuristicPath) {
                     System.out.println("Visited Vertex: " + vertex.label);
                 }
             }

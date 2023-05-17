@@ -4,16 +4,16 @@ package ro.unibuc.fmi.graph;
 import java.util.Objects;
 
 
-class Vertex implements Comparable {
+public class Vertex implements Comparable {
 
-    Integer label;
+    public Integer label;
     double distance;
     double g;
     double h;
     double f;
     Vertex parent;
 
-    Vertex(Integer label) {
+    public Vertex(Integer label) {
         this.label = label;
         this.distance = Float.MAX_VALUE;
         this.g = 0;

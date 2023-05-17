@@ -264,7 +264,6 @@ public class Graph {
 
     }
 
-
     public List<Integer> aStar(int startNode, int goalNode) {
 
         PriorityQueue<Vertex> openSet = new PriorityQueue<>(Comparator.comparingDouble(a -> a.f));
@@ -281,7 +280,7 @@ public class Graph {
             Vertex currentNode = openSet.poll();
 
             if (currentNode.label == goalNode) {
-                return reconstructPath(currentNode);
+                return reconstructAStarPath(currentNode);
             }
 
             closedSet.add(currentNode.label);
@@ -332,7 +331,7 @@ public class Graph {
         return Math.abs(startNode - goalNode);
     }
 
-    public List<Integer> reconstructPath(Vertex vertex) {
+    public List<Integer> reconstructAStarPath(Vertex vertex) {
 
         List<Integer> path = new ArrayList<>();
         Vertex current = vertex;
@@ -340,6 +339,107 @@ public class Graph {
         while (current != null) {
             path.add(0, current.label);
             current = current.parent;
+        }
+
+        return path;
+
+    }
+
+    public List<Vertex> bidirectionalSearch(Vertex sourceNode, Vertex targetNode) {
+
+        if (isDirected) {
+            throw new RuntimeException("Directed graphs are not allowed for bidirectional search!");
+        }
+
+        Set<Vertex> visitedSource = new HashSet<>();
+        Set<Vertex> visitedTarget = new HashSet<>();
+        Queue<Vertex> queueSource = new LinkedList<>();
+        Queue<Vertex> queueTarget = new LinkedList<>();
+        Map<Vertex, Vertex> parentsSource = new HashMap<>();
+        Map<Vertex, Vertex> parentsTarget = new HashMap<>();
+
+        // Enqueue the source and target nodes and mark them as visited
+        queueSource.offer(sourceNode);
+        visitedSource.add(sourceNode);
+
+        queueTarget.offer(targetNode);
+        visitedTarget.add(targetNode);
+
+        while (!queueSource.isEmpty() && !queueTarget.isEmpty()) {
+
+            // Explore nodes from the source side
+            Vertex currentSource = queueSource.poll();
+
+            for (Vertex v : adjVertices.keySet()) {
+
+                if (Objects.equals(v.label, currentSource.label)) {
+
+                    for (Vertex w : adjVertices.get(v)) {
+
+                        if (!visitedSource.contains(w)) {
+
+                            queueSource.offer(w);
+                            visitedSource.add(w);
+                            parentsSource.put(w, currentSource);
+
+                            if (visitedTarget.contains(w)) {
+                                return reconstructBidirectionalSearchPath(w, parentsSource, parentsTarget);
+                            }
+
+                        }
+                    }
+                }
+
+            }
+
+
+            // Explore nodes from the target side
+            Vertex currentTarget = queueTarget.poll();
+
+            for (Vertex u : adjVertices.keySet()) {
+
+                if (Objects.equals(u.label, currentSource.label)) {
+
+                    for (Vertex w : adjVertices.get(u)) {
+
+                        if (!visitedTarget.contains(w)) {
+                            queueTarget.offer(w);
+                            visitedTarget.add(w);
+                            parentsTarget.put(w, currentTarget);
+
+                            if (visitedSource.contains(w)) {
+                                return reconstructBidirectionalSearchPath(w, parentsSource, parentsTarget);
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return new ArrayList<>(); // No path found
+
+    }
+
+    public List<Vertex> reconstructBidirectionalSearchPath(Vertex intersectionVertex, Map<Vertex, Vertex> parentsSource, Map<Vertex, Vertex> parentsTarget) {
+
+        List<Vertex> path = new ArrayList<>();
+        Vertex currentVertex = intersectionVertex;
+
+        while (currentVertex != null) {
+            path.add(currentVertex);
+            currentVertex = parentsSource.get(currentVertex);
+        }
+
+        currentVertex = parentsTarget.get(intersectionVertex);
+
+        while (currentVertex != null) {
+            path.add(0, currentVertex);
+            currentVertex = parentsTarget.get(currentVertex);
         }
 
         return path;

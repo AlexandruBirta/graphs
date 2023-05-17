@@ -2,6 +2,7 @@ package ro.unibuc.fmi;
 
 
 import ro.unibuc.fmi.graph.Graph;
+import ro.unibuc.fmi.graph.Vertex;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Facultate\\UNIBUC\\Materii\\Anul II\\Semestrul II\\Tehnici Avansate de Programare\\Examen\\graphs\\src\\main\\resources\\input.txt"))) {
 
             Graph graph = new Graph();
-            graph.setWeighted(true);
+            graph.setWeighted(false);
             graph.setDirected(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
@@ -48,20 +49,43 @@ public class Main {
 
             System.out.println(graph.printEdges());
 
+            //Dijkstra*********************************************************************
+
 //            graph.dijkstra(numberOfVertices, 0);
 //            System.out.println('\n');
-//
+
+            //DFS/BFS*********************************************************************
+
 //            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
 //            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));
 
-            List<Integer> path = graph.aStar(0, 4);
+            //A star*********************************************************************
+
+//            List<Integer> path = graph.aStar(0, 4);
+//
+//            if (path.isEmpty()) {
+//                System.out.println("No path found.");
+//            } else {
+//                System.out.println("Path found!");
+//                for (int node : path) {
+//                    System.out.println(node);
+//                }
+//            }
+
+            //Bidirectional Search*********************************************************************
+
+
+            Vertex sourceVertex = new Vertex(0);
+            Vertex targetVertex = new Vertex(4);
+
+            List<Vertex> path = graph.bidirectionalSearch(sourceVertex, targetVertex);
 
             if (path.isEmpty()) {
                 System.out.println("No path found.");
             } else {
                 System.out.println("Path found!");
-                for (int node : path) {
-                    System.out.println(node);
+                for (Vertex vertex : path) {
+                    System.out.println("Visited Vertex: " + vertex.label);
                 }
             }
 

@@ -2,6 +2,7 @@ package ro.unibuc.fmi.graph;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Graph {
@@ -555,5 +556,98 @@ public class Graph {
         return path;
     }
 
+
+    public List<Vertex> hashDistributedAStar(Vertex sourceVertex, Vertex targetVertex) {
+
+        if(!isWeighted) {
+            throw new RuntimeException("Graph needs to be weighted to execute hash distributed A* algorithm!");
+        }
+
+        Map<Vertex, Integer> gScores = new HashMap<>();
+        Map<Vertex, Integer> fScores = new HashMap<>();
+
+        PriorityQueue<State> openSet = new PriorityQueue<>();
+        Set<Vertex> closedSet = new HashSet<>();
+
+        Map<Vertex, Vertex> parents = new HashMap<>();
+
+        // Initialize the g-scores and f-scores for all nodes
+        for (Vertex vertex : adjVertices.keySet()) {
+            gScores.put(vertex, Integer.MAX_VALUE);
+            fScores.put(vertex, Integer.MAX_VALUE);
+        }
+
+        // Set the g-score of the source vertex to 0
+        gScores.put(sourceVertex, 0);
+
+        // Set the f-score of the source vertex to the estimated heuristic cost to reach the target vertex
+        fScores.put(sourceVertex, hashAStarheuristicCost(sourceVertex, targetVertex));
+
+        // Add the source vertex to the open set
+        openSet.offer(new State(sourceVertex, 0, fScores.get(sourceVertex)));
+
+        while (!openSet.isEmpty()) {
+            // Get the vertex with the lowest f-score from the open set
+            State current = openSet.poll();
+            Vertex currentVertex = current.vertex;
+
+            if (currentVertex == targetVertex) {
+                // Reconstruct the path
+                return reconstructPath(parents, targetVertex);
+            }
+
+            closedSet.add(currentVertex);
+
+            // Process each neighbor of the current vertex
+            for (Vertex v : adjVertices.keySet()) {
+
+                if (Objects.equals(v.label, currentVertex.label)) {
+
+                    for (Vertex w : adjVertices.get(v)) {
+
+                        if (closedSet.contains(w)) {
+                            continue; // Ignore already processed neighbors
+                        }
+
+                        int tentativeGScore = (int) (gScores.get(currentVertex) + weights.get(v).get(w));
+
+                        if (openSet.stream().noneMatch(state -> state.vertex == w)) {
+                            openSet.offer(new State(w, tentativeGScore, tentativeGScore + hashAStarheuristicCost(w, targetVertex)));
+                        } else if (tentativeGScore >= gScores.get(w)) {
+                            continue; // This is not a better path
+                        }
+
+                        // Update the parent and g-score
+                        parents.put(w, currentVertex);
+                        gScores.put(w, tentativeGScore);
+                        fScores.put(w, tentativeGScore + hashAStarheuristicCost(w, targetVertex));
+                        
+                    }
+                    
+                }
+                
+            }
+
+        }
+
+        return new ArrayList<>(); // No path found
+    }
+
+    public List<Vertex> reconstructPath(Map<Vertex, Vertex> parents, Vertex targetNode) {
+        List<Vertex> path = new ArrayList<>();
+        Vertex currentNode = targetNode;
+
+        while (currentNode != null) {
+            path.add(currentNode);
+            currentNode = parents.get(currentNode);
+        }
+
+        Collections.reverse(path);
+        return path;
+    }
+
+    public int hashAStarheuristicCost(Vertex sourceVertex, Vertex targetVertex) {
+        return Math.abs(sourceVertex.label - targetVertex.label);
+    }
 
 }

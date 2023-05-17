@@ -20,7 +20,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Facultate\\UNIBUC\\Materii\\Anul II\\Semestrul II\\Tehnici Avansate de Programare\\Examen\\graphs\\src\\main\\resources\\input.txt"))) {
 
             Graph graph = new Graph();
-            graph.setWeighted(false);
+            graph.setWeighted(true);
             graph.setDirected(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
@@ -89,15 +89,30 @@ public class Main {
 
             //B Heuristic*********************************************************************
 
-            Vertex sourceNode = new Vertex(0); // Choose the source node
-            Vertex targetNode = new Vertex(4); // Choose the target node
-            List<Vertex> bHeuristicPath = graph.bHeuristicSearch(sourceNode, targetNode);
+//            Vertex sourceVertex = new Vertex(0); // Choose the source node
+//            Vertex targetVertex = new Vertex(4); // Choose the target node
+//            List<Vertex> bHeuristicPath = graph.bHeuristicSearch(sourceVertex, targetVertex);
+//
+//            if (bHeuristicPath.isEmpty()) {
+//                System.out.println("No path found.");
+//            } else {
+//                System.out.println("Path found!");
+//                for (Vertex vertex : bHeuristicPath) {
+//                    System.out.println("Visited Vertex: " + vertex.label);
+//                }
+//            }
 
-            if (bHeuristicPath.isEmpty()) {
+            //Hash A**********************************************************************
+
+            Vertex sourceVertex = new Vertex(0); // Choose the source node
+            Vertex targetVertex = new Vertex(4); // Choose the target node
+            List<Vertex> path = graph.hashDistributedAStar(sourceVertex, targetVertex);
+
+            if (path.isEmpty()) {
                 System.out.println("No path found.");
             } else {
                 System.out.println("Path found!");
-                for (Vertex vertex : bHeuristicPath) {
+                for (Vertex vertex : path) {
                     System.out.println("Visited Vertex: " + vertex.label);
                 }
             }

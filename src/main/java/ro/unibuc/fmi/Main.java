@@ -16,7 +16,7 @@ public class Main {
     public static void main(String[] args) {
 
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("D:\\\\Facultate\\\\UNIBUC\\\\Materii\\\\Anul II\\\\Semestrul II\\\\Tehnici Avansate de Programare\\\\Examen\\\\tutorials\\\\Graphs\\\\src\\\\main\\\\resources\\\\input.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Facultate\\UNIBUC\\Materii\\Anul II\\Semestrul II\\Tehnici Avansate de Programare\\Examen\\graphs\\src\\main\\resources\\input.txt"))) {
 
             Graph graph = new Graph();
             graph.setWeighted(true);
@@ -54,11 +54,7 @@ public class Main {
 //            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
 //            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));
 
-
-            int startNode = 0;
-            int goalNode = 4;
-
-            List<Integer> path = graph.aStar(startNode, goalNode);
+            List<Integer> path = graph.aStar(0, 4);
 
             if (path.isEmpty()) {
                 System.out.println("No path found.");

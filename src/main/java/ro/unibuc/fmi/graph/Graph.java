@@ -329,10 +329,7 @@ public class Graph {
     }
 
     public double calculateHeuristic(int startNode, int goalNode) {
-        // Calculate the heuristic (e.g., Manhattan distance, Euclidean distance, etc.)
-        // based on the specific problem domain.
-        // Return the estimated cost from the source to the target node.
-        return 0;
+        return Math.abs(startNode - goalNode);
     }
 
     public List<Integer> reconstructPath(Vertex vertex) {

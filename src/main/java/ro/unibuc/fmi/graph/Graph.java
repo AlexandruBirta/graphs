@@ -694,4 +694,40 @@ public class Graph {
 
     }
 
+    public List<Vertex> lexDFS(Vertex startVertex) {
+
+        List<Vertex> ordering = new ArrayList<>();
+        Set<Vertex> visited = new HashSet<>();
+
+        lexDFSHelper(startVertex, visited, ordering);
+
+        return ordering;
+
+    }
+
+    public void lexDFSHelper(Vertex vertex, Set<Vertex> visited, List<Vertex> ordering) {
+
+        visited.add(vertex);
+        ordering.add(vertex);
+
+        List<Vertex> neighbors = new ArrayList<>();
+
+        for (Vertex v : adjVertices.keySet()) {
+
+            if (Objects.equals(v.label, vertex.label)) {
+                neighbors.addAll(adjVertices.get(v));
+            }
+
+        }
+
+        neighbors.sort(Comparator.comparingInt(n -> n.label));
+
+        for (Vertex neighbor : neighbors) {
+            if (!visited.contains(neighbor)) {
+                lexDFSHelper(neighbor, visited, ordering);
+            }
+        }
+
+    }
+
 }

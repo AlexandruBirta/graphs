@@ -120,14 +120,25 @@ public class Main {
             //lexBFS**********************************************************************
 
 
-            Vertex sourceVertex = new Vertex(0); // Choose the source node
-            List<Vertex> ordering = graph.lexBFS(sourceVertex);
+//            Vertex sourceVertex = new Vertex(0); // Choose the source node
+//            List<Vertex> ordering = graph.lexBFS(sourceVertex);
+//
+//            System.out.println("Lexicographic BFS Ordering:");
+//            for (Vertex vertex : ordering) {
+//                System.out.println(vertex.label);
+//            }
 
-            System.out.println("Lexicographic BFS Ordering:");
+            //lexDFS**********************************************************************
+
+            Vertex sourceVertex = new Vertex(0); // Choose the source node
+            List<Vertex> ordering = graph.lexDFS(sourceVertex);
+
+            System.out.println("Lexicographic DFS Ordering:");
             for (Vertex vertex : ordering) {
                 System.out.println(vertex.label);
             }
-
+            
+            
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

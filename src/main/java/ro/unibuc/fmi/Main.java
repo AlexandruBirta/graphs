@@ -8,6 +8,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import java.util.*;
+
 
 public class Main {
 
@@ -46,11 +48,26 @@ public class Main {
 
             System.out.println(graph.printEdges());
 
-            graph.dijkstra(numberOfVertices, 0);
-            System.out.println('\n');
+//            graph.dijkstra(numberOfVertices, 0);
+//            System.out.println('\n');
+//
+//            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
+//            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));
 
-            System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
-            System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));
+
+            int startNode = 0;
+            int goalNode = 4;
+
+            List<Integer> path = graph.aStar(startNode, goalNode);
+
+            if (path.isEmpty()) {
+                System.out.println("No path found.");
+            } else {
+                System.out.println("Path found!");
+                for (int node : path) {
+                    System.out.println(node);
+                }
+            }
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

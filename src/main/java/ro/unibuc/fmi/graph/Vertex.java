@@ -4,15 +4,21 @@ package ro.unibuc.fmi.graph;
 import java.util.Objects;
 
 
-class Vertex  implements Comparable {
+class Vertex implements Comparable {
 
     Integer label;
     double distance;
+    double g;
+    double h;
+    double f;
     Vertex parent;
 
     Vertex(Integer label) {
         this.label = label;
         this.distance = Float.MAX_VALUE;
+        this.g = 0;
+        this.h = 0;
+        this.f = 0;
         this.parent = null;
     }
 
@@ -37,12 +43,12 @@ class Vertex  implements Comparable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Vertex vertex = (Vertex) o;
-        return Double.compare(vertex.distance, distance) == 0 && Objects.equals(label, vertex.label) && Objects.equals(parent, vertex.parent);
+        return Double.compare(vertex.distance, distance) == 0 && Double.compare(vertex.g, g) == 0 && Double.compare(vertex.h, h) == 0 && Double.compare(vertex.f, f) == 0 && Objects.equals(label, vertex.label) && Objects.equals(parent, vertex.parent);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(label, distance, parent);
+        return Objects.hash(label, distance, g, h, f, parent);
     }
 
     @Override

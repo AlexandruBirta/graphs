@@ -189,7 +189,7 @@ public class Graph {
 
     public void dijkstra(int numberOfVertices, int startVertex) {
 
-        if(!isWeighted) {
+        if (!isWeighted) {
             throw new RuntimeException("Graph is not weighted for Dijkstra algorithm!");
         }
 
@@ -264,5 +264,89 @@ public class Graph {
 
     }
 
+
+    public List<Integer> aStar(int startNode, int goalNode) {
+
+        PriorityQueue<Vertex> openSet = new PriorityQueue<>(Comparator.comparingDouble(a -> a.f));
+        Set<Integer> closedSet = new HashSet<>();
+
+        Vertex start = new Vertex(startNode);
+        start.g = 0;
+        start.h = calculateHeuristic(startNode, goalNode);
+        start.f = start.h;
+        openSet.add(start);
+
+        while (!openSet.isEmpty()) {
+
+            Vertex currentNode = openSet.poll();
+
+            if (currentNode.label == goalNode) {
+                return reconstructPath(currentNode);
+            }
+
+            closedSet.add(currentNode.label);
+
+            for (Vertex v : adjVertices.keySet()) {
+
+                if (Objects.equals(v.label, currentNode.label)) {
+
+                    for (Vertex w : adjVertices.get(v)) {
+
+                        int neighborId = w.label;
+                        double neighborWeight = weights.get(new Vertex(currentNode.label)).get(new Vertex(w.label));
+
+                        if (closedSet.contains(neighborId)) continue;
+
+                        Vertex neighborNode = new Vertex(neighborId);
+                        neighborNode.g = currentNode.g + neighborWeight;
+                        neighborNode.h = calculateHeuristic(neighborId, goalNode);
+                        neighborNode.f = neighborNode.g + neighborNode.h;
+                        neighborNode.parent = currentNode;
+
+                        boolean isNewNode = true;
+
+                        for (Vertex openNode : openSet) {
+                            if (openNode.label == neighborId && neighborNode.f >= openNode.f) {
+                                isNewNode = false;
+                                break;
+                            }
+                        }
+
+                        if (isNewNode) {
+                            openSet.add(neighborNode);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return new ArrayList<>();
+
+    }
+
+    public double calculateHeuristic(int startNode, int goalNode) {
+        // Calculate the heuristic (e.g., Manhattan distance, Euclidean distance, etc.)
+        // based on the specific problem domain.
+        // Return the estimated cost from the source to the target node.
+        return 0;
+    }
+
+    public List<Integer> reconstructPath(Vertex vertex) {
+
+        List<Integer> path = new ArrayList<>();
+        Vertex current = vertex;
+
+        while (current != null) {
+            path.add(0, current.label);
+            current = current.parent;
+        }
+
+        return path;
+
+    }
 
 }

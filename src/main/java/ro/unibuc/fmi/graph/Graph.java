@@ -187,5 +187,82 @@ public class Graph {
 
     }
 
+    public void dijkstra(int numberOfVertices, int startVertex) {
+
+        if(!isWeighted) {
+            throw new RuntimeException("Graph is not weighted for Dijkstra algorithm!");
+        }
+
+        // for storing distances after removing vertex from Queue
+        double[] distances = new double[numberOfVertices];
+        // for storing father id's after removing vertex from Queue
+        int[] parents = new int[numberOfVertices];
+        List<Edge> edges = new ArrayList<>();
+
+        Arrays.fill(parents, -1);
+
+        for (Vertex v : adjVertices.keySet()) {
+            for (Vertex w : adjVertices.get(v)) {
+                edges.add(new Edge(v, w));
+            }
+        }
+
+        // set up vertex queue
+        PriorityQueue<Vertex> queue = new PriorityQueue<>();
+
+        for (int i = 0; i < numberOfVertices; i++) {
+
+            if (i != startVertex) {
+                queue.add(new Vertex(i));
+            }
+
+        }
+
+        // add startVertex
+        Vertex vertex = new Vertex(startVertex);
+        vertex.setDistance(0);
+        queue.add(vertex);
+
+        // loop through all vertices
+        while (!queue.isEmpty()) {
+
+            // get vertex with the shortest distance
+            Vertex u = queue.remove();
+            distances[u.label] = u.getDistance();
+
+            // iterate through all neighbours
+
+            for (Edge e : edges) {
+
+                for (Vertex v : queue) {
+
+                    // check if vertex was visited already
+                    if (!Objects.equals(e.getDestinationVertex().label, v.label)) {
+                        continue;
+                    }
+
+                    // check distance 
+                    if (v.getDistance() > u.getDistance() + weights.get(e.sourceVertex).get(e.destinationVertex)) {
+
+                        v.setDistance(u.getDistance() + weights.get(e.sourceVertex).get(e.destinationVertex));
+                        v.setParent(u);
+                        parents[v.label] = v.getParent().label;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        // print final shortest paths
+        System.out.println("Vertex\tDistance\tParent Vertex");
+        for (int i = 0; i < numberOfVertices; i++) {
+            System.out.println(i + "\t" + distances[i] + "\t\t" + parents[i]);
+        }
+
+    }
+
 
 }

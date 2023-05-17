@@ -17,20 +17,19 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader("D:\\\\Facultate\\\\UNIBUC\\\\Materii\\\\Anul II\\\\Semestrul II\\\\Tehnici Avansate de Programare\\\\Examen\\\\tutorials\\\\Graphs\\\\src\\\\main\\\\resources\\\\input.txt"))) {
 
             Graph graph = new Graph();
-
+            graph.setWeighted(true);
             graph.setDirected(false);
-            graph.setWeighted(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
             int numberOfVertices = Integer.parseInt(graphProperties[0]);
             int numberOfEdges = Integer.parseInt(String.valueOf(graphProperties[1]));
 
-            for (int i = 1; i <= numberOfVertices; i++) {
+            for (int i = 0; i < numberOfVertices; i++) {
                 graph.addVertex(i);
             }
 
-            for (int i = 1; i <= numberOfEdges; i++) {
+            for (int i = 0; i < numberOfEdges; i++) {
 
                 String[] edge = reader.readLine().trim().split("\\s+");
 
@@ -44,7 +43,11 @@ public class Main {
 
             System.out.println(graph.printGraph());
             System.out.println('\n');
+
             System.out.println(graph.printEdges());
+
+            graph.dijkstra(numberOfVertices, 0);
+            System.out.println('\n');
 
             System.out.println("DFS: " + graph.depthFirstTraversal(graph, 1));
             System.out.println("BFS: " + graph.breadthFirstTraversal(graph, 1));

@@ -2,7 +2,6 @@ package ro.unibuc.fmi.graph;
 
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Graph {
@@ -265,55 +264,55 @@ public class Graph {
 
     }
 
-    public List<Integer> aStar(int startNode, int goalNode) {
+    public List<Integer> aStar(int startVertex, int goalVertex) {
 
         PriorityQueue<Vertex> openSet = new PriorityQueue<>(Comparator.comparingDouble(a -> a.f));
         Set<Integer> closedSet = new HashSet<>();
 
-        Vertex start = new Vertex(startNode);
+        Vertex start = new Vertex(startVertex);
         start.g = 0;
-        start.h = calculateHeuristic(startNode, goalNode);
+        start.h = calculateHeuristic(startVertex, goalVertex);
         start.f = start.h;
         openSet.add(start);
 
         while (!openSet.isEmpty()) {
 
-            Vertex currentNode = openSet.poll();
+            Vertex currentVertex = openSet.poll();
 
-            if (currentNode.label == goalNode) {
-                return reconstructAStarPath(currentNode);
+            if (currentVertex.label == goalVertex) {
+                return reconstructAStarPath(currentVertex);
             }
 
-            closedSet.add(currentNode.label);
+            closedSet.add(currentVertex.label);
 
             for (Vertex v : adjVertices.keySet()) {
 
-                if (Objects.equals(v.label, currentNode.label)) {
+                if (Objects.equals(v.label, currentVertex.label)) {
 
                     for (Vertex w : adjVertices.get(v)) {
 
                         int neighborId = w.label;
-                        double neighborWeight = weights.get(new Vertex(currentNode.label)).get(new Vertex(w.label));
+                        double neighborWeight = weights.get(new Vertex(currentVertex.label)).get(new Vertex(w.label));
 
                         if (closedSet.contains(neighborId)) continue;
 
-                        Vertex neighborNode = new Vertex(neighborId);
-                        neighborNode.g = currentNode.g + neighborWeight;
-                        neighborNode.h = calculateHeuristic(neighborId, goalNode);
-                        neighborNode.f = neighborNode.g + neighborNode.h;
-                        neighborNode.parent = currentNode;
+                        Vertex neighborVertex = new Vertex(neighborId);
+                        neighborVertex.g = currentVertex.g + neighborWeight;
+                        neighborVertex.h = calculateHeuristic(neighborId, goalVertex);
+                        neighborVertex.f = neighborVertex.g + neighborVertex.h;
+                        neighborVertex.parent = currentVertex;
 
-                        boolean isNewNode = true;
+                        boolean isNewVertex = true;
 
-                        for (Vertex openNode : openSet) {
-                            if (openNode.label == neighborId && neighborNode.f >= openNode.f) {
-                                isNewNode = false;
+                        for (Vertex openVertex : openSet) {
+                            if (openVertex.label == neighborId && neighborVertex.f >= openVertex.f) {
+                                isNewVertex = false;
                                 break;
                             }
                         }
 
-                        if (isNewNode) {
-                            openSet.add(neighborNode);
+                        if (isNewVertex) {
+                            openSet.add(neighborVertex);
                         }
 
                     }
@@ -328,8 +327,8 @@ public class Graph {
 
     }
 
-    public double calculateHeuristic(int startNode, int goalNode) {
-        return Math.abs(startNode - goalNode);
+    public double calculateHeuristic(int startVertex, int goalVertex) {
+        return Math.abs(startVertex - goalVertex);
     }
 
     public List<Integer> reconstructAStarPath(Vertex vertex) {
@@ -346,7 +345,7 @@ public class Graph {
 
     }
 
-    public List<Vertex> bidirectionalSearch(Vertex sourceNode, Vertex targetNode) {
+    public List<Vertex> bidirectionalSearch(Vertex sourceVertex, Vertex targetVertex) {
 
         if (isDirected) {
             throw new RuntimeException("Directed graphs are not allowed for bidirectional search!");
@@ -360,11 +359,11 @@ public class Graph {
         Map<Vertex, Vertex> parentsTarget = new HashMap<>();
 
         // Enqueue the source and target nodes and mark them as visited
-        queueSource.offer(sourceNode);
-        visitedSource.add(sourceNode);
+        queueSource.offer(sourceVertex);
+        visitedSource.add(sourceVertex);
 
-        queueTarget.offer(targetNode);
-        visitedTarget.add(targetNode);
+        queueTarget.offer(targetVertex);
+        visitedTarget.add(targetVertex);
 
         while (!queueSource.isEmpty() && !queueTarget.isEmpty()) {
 
@@ -559,7 +558,7 @@ public class Graph {
 
     public List<Vertex> hashDistributedAStar(Vertex sourceVertex, Vertex targetVertex) {
 
-        if(!isWeighted) {
+        if (!isWeighted) {
             throw new RuntimeException("Graph needs to be weighted to execute hash distributed A* algorithm!");
         }
 
@@ -581,7 +580,7 @@ public class Graph {
         gScores.put(sourceVertex, 0);
 
         // Set the f-score of the source vertex to the estimated heuristic cost to reach the target vertex
-        fScores.put(sourceVertex, hashAStarheuristicCost(sourceVertex, targetVertex));
+        fScores.put(sourceVertex, hashAStarHeuristicCost(sourceVertex, targetVertex));
 
         // Add the source vertex to the open set
         openSet.offer(new State(sourceVertex, 0, fScores.get(sourceVertex)));
@@ -593,7 +592,7 @@ public class Graph {
 
             if (currentVertex == targetVertex) {
                 // Reconstruct the path
-                return reconstructPath(parents, targetVertex);
+                return reconstructHashAStarPath(parents, targetVertex);
             }
 
             closedSet.add(currentVertex);
@@ -612,7 +611,7 @@ public class Graph {
                         int tentativeGScore = (int) (gScores.get(currentVertex) + weights.get(v).get(w));
 
                         if (openSet.stream().noneMatch(state -> state.vertex == w)) {
-                            openSet.offer(new State(w, tentativeGScore, tentativeGScore + hashAStarheuristicCost(w, targetVertex)));
+                            openSet.offer(new State(w, tentativeGScore, tentativeGScore + hashAStarHeuristicCost(w, targetVertex)));
                         } else if (tentativeGScore >= gScores.get(w)) {
                             continue; // This is not a better path
                         }
@@ -620,12 +619,12 @@ public class Graph {
                         // Update the parent and g-score
                         parents.put(w, currentVertex);
                         gScores.put(w, tentativeGScore);
-                        fScores.put(w, tentativeGScore + hashAStarheuristicCost(w, targetVertex));
-                        
+                        fScores.put(w, tentativeGScore + hashAStarHeuristicCost(w, targetVertex));
+
                     }
-                    
+
                 }
-                
+
             }
 
         }
@@ -633,21 +632,66 @@ public class Graph {
         return new ArrayList<>(); // No path found
     }
 
-    public List<Vertex> reconstructPath(Map<Vertex, Vertex> parents, Vertex targetNode) {
+    public List<Vertex> reconstructHashAStarPath(Map<Vertex, Vertex> parents, Vertex targetVertex) {
         List<Vertex> path = new ArrayList<>();
-        Vertex currentNode = targetNode;
+        Vertex currentVertex = targetVertex;
 
-        while (currentNode != null) {
-            path.add(currentNode);
-            currentNode = parents.get(currentNode);
+        while (currentVertex != null) {
+            path.add(currentVertex);
+            currentVertex = parents.get(currentVertex);
         }
 
         Collections.reverse(path);
         return path;
     }
 
-    public int hashAStarheuristicCost(Vertex sourceVertex, Vertex targetVertex) {
+    public int hashAStarHeuristicCost(Vertex sourceVertex, Vertex targetVertex) {
         return Math.abs(sourceVertex.label - targetVertex.label);
+    }
+
+    public List<Vertex> lexBFS(Vertex startVertex) {
+
+        if(isDirected) {
+            throw new RuntimeException("Directed graphs not allowed for lexBFS call!");
+        }
+
+        List<Vertex> ordering = new ArrayList<>();
+        Set<Vertex> visited = new HashSet<>();
+        Queue<Vertex> queue = new LinkedList<>();
+
+        queue.offer(startVertex);
+        visited.add(startVertex);
+
+        while (!queue.isEmpty()) {
+
+            Vertex vertex = queue.poll();
+            ordering.add(vertex);
+
+            List<Vertex> neighbors = new ArrayList<>();
+
+            for (Vertex v : adjVertices.keySet()) {
+
+                if (Objects.equals(v.label, vertex.label)) {
+                    neighbors.addAll(adjVertices.get(v));
+                }
+
+            }
+
+            neighbors.sort(Comparator.comparingInt(n -> n.label));
+
+            for (Vertex neighbor : neighbors) {
+
+                if (!visited.contains(neighbor)) {
+                    queue.offer(neighbor);
+                    visited.add(neighbor);
+                }
+
+            }
+
+        }
+
+        return ordering;
+
     }
 
 }

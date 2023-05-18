@@ -150,6 +150,7 @@ public class Graph {
 
     public List<Integer> findShortestPath(int startVertex, int goalVertex, int numProcessors, int numberOfVertices) {
 
+        // Check if graph is not weighted
         if (!isWeighted) {
             throw new RuntimeException("Hash Distributed A* cannot run on un-weighted graphs!");
         }
@@ -214,6 +215,7 @@ public class Graph {
     }
 
     private int heuristic(int source, int destination) {
+        // Use generic heuristic for demonstration purposes
         return Math.abs(source - destination);
     }
 

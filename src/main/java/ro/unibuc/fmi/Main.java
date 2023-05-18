@@ -17,19 +17,22 @@ public class Main {
 
         try (BufferedReader reader = new BufferedReader(new FileReader("C:\\TAP\\graphs\\src\\main\\resources\\input.txt"))) {
 
+            // Initialize graph
             Graph graph = new Graph();
             graph.setWeighted(true);
             graph.setDirected(false);
 
+            // Parse input file
             String[] graphProperties = reader.readLine().trim().split("\\s+");
-
             int numberOfVertices = Integer.parseInt(graphProperties[0]);
             int numberOfEdges = Integer.parseInt(String.valueOf(graphProperties[1]));
 
+            // Build graph vertices
             for (int i = 0; i < numberOfVertices; i++) {
                 graph.addVertex(i);
             }
 
+            // Build graph edges
             for (int i = 0; i < numberOfEdges; i++) {
 
                 String[] edge = reader.readLine().trim().split("\\s+");
@@ -42,7 +45,8 @@ public class Main {
 
             }
 
-            System.out.println(graph.printGraph());
+            // Print created graph
+            System.out.println("Graph from input file:\n" + graph.printGraph());
 
             // Specify the start and goal vertices
             int startVertex = 0;
@@ -56,7 +60,7 @@ public class Main {
 
             // Print the shortest path
             if (!shortestPath.isEmpty()) {
-                System.out.println("Shortest Path: " + shortestPath);
+                System.out.println("Shortest path using Hash Distributed A*: " + shortestPath);
             } else {
                 System.out.println("No path found.");
             }

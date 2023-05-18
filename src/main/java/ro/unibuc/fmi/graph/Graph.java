@@ -809,7 +809,7 @@ public class Graph {
         Set<Vertex> visited = new HashSet<>();
         PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingDouble(e -> weights.get(e.getSourceVertex()).get(e.getDestinationVertex())));
 
-        Vertex startVertex = new Vertex(startVertexLabel); // Choose the start node
+        Vertex startVertex = new Vertex(startVertexLabel); // Choose the start vertex
         visited.add(startVertex);
 
 
@@ -866,10 +866,10 @@ public class Graph {
 
         int[] level = new int[numberOfVertices];
         Arrays.fill(level, -1);
-        level[0] = 0; // Start node at level 0
+        level[0] = 0; // Start vertex at level 0
 
         int processorId = 0;
-        processorQueue[processorId] = 0; // Start node in the first processor's queue
+        processorQueue[processorId] = 0; // Start vertex in the first processor's queue
 
         while (processorQueue[processorId] != -1) {
             int currentVertex = processorQueue[processorId];
@@ -911,6 +911,77 @@ public class Graph {
             // Switch to the next processor
             processorId = (processorId + 1) % numProcessors;
 
+        }
+
+        System.out.println("Vertex Levels:");
+        for (int i = 0; i < numberOfVertices; i++) {
+            System.out.println("Vertex " + i + ": Level " + level[i]);
+        }
+
+    }
+
+
+    public void pdfsOneDimensional(int numberOfVertices) {
+
+        int numProcessors = 4; // Number of processors
+        int[] processorStack = new int[numProcessors];
+        int[] nextProcessorStack = new int[numProcessors];
+
+        boolean[] visited = new boolean[numberOfVertices];
+        int[] level = new int[numberOfVertices];
+
+        Arrays.fill(visited, false);
+        Arrays.fill(level, -1);
+
+        int startVertex = 0; // Start vertex for traversal
+
+        int processorId = 0;
+        processorStack[processorId] = startVertex; // Start vertex in the first processor's stack
+        level[startVertex] = 0; // Set the level of the start vertex
+
+        while (processorStack[processorId] != -1) {
+
+            int currentVertex = processorStack[processorId];
+
+            if (!visited[currentVertex]) {
+                visited[currentVertex] = true;
+
+                for (Vertex u : adjVertices.keySet()) {
+
+                    if (Objects.equals(u.label, currentVertex)) {
+
+                        for (Vertex w : adjVertices.get(u)) {
+
+                            int neighborId = w.label;
+
+                            if (!visited[neighborId]) {
+                                level[neighborId] = level[currentVertex] + 1;
+                                int nextProcessorId = neighborId % numProcessors;
+                                nextProcessorStack[nextProcessorId] = neighborId;
+
+                                // Simulate message passing by updating the next processor's stack
+                                if (nextProcessorId != processorId) {
+                                    nextProcessorStack[nextProcessorId] = neighborId;
+                                }
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            processorStack[processorId] = -1; // Mark the current processor's stack as empty
+
+            // Simulate message passing by updating the current processor's stack
+            if (processorId != nextProcessorStack[processorId] % numProcessors) {
+                processorStack[processorId] = nextProcessorStack[processorId];
+            }
+
+            // Switch to the next processor
+            processorId = (processorId + 1) % numProcessors;
         }
 
         System.out.println("Vertex Levels:");

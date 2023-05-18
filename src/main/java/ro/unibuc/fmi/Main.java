@@ -165,7 +165,12 @@ public class Main {
             //PBFS 1-D**********************************************************************
 
 
-            graph.pbfsOneDimensional(numberOfVertices);
+//            graph.pbfsOneDimensional(numberOfVertices);
+
+            //PDFS 1-D**********************************************************************
+
+
+            graph.pdfsOneDimensional(numberOfVertices);
 
 
         } catch (FileNotFoundException e) {

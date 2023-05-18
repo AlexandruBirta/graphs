@@ -13,6 +13,10 @@ public class Graph {
 
     private boolean isWeighted;
 
+    private int index;
+    private List<List<Vertex>> sccList;
+    private Stack<Vertex> sccStack;
+
     public Graph() {
         this.adjVertices = new HashMap<>();
         this.isWeighted = false;
@@ -358,7 +362,7 @@ public class Graph {
         Map<Vertex, Vertex> parentsSource = new HashMap<>();
         Map<Vertex, Vertex> parentsTarget = new HashMap<>();
 
-        // Enqueue the source and target nodes and mark them as visited
+        // Enqueue the source and target vertices and mark them as visited
         queueSource.offer(sourceVertex);
         visitedSource.add(sourceVertex);
 
@@ -367,7 +371,7 @@ public class Graph {
 
         while (!queueSource.isEmpty() && !queueTarget.isEmpty()) {
 
-            // Explore nodes from the source side
+            // Explore vertices from the source side
             Vertex currentSource = queueSource.poll();
 
             for (Vertex v : adjVertices.keySet()) {
@@ -393,7 +397,7 @@ public class Graph {
             }
 
 
-            // Explore nodes from the target side
+            // Explore vertices from the target side
             Vertex currentTarget = queueTarget.poll();
 
             for (Vertex u : adjVertices.keySet()) {
@@ -457,7 +461,7 @@ public class Graph {
         Map<Vertex, Vertex> parentsSource = new HashMap<>();
         Map<Vertex, Vertex> parentsTarget = new HashMap<>();
 
-        // Enqueue the source and target nodes and mark them as visited
+        // Enqueue the source and target vertices and mark them as visited
         queueSource.offer(sourceVertex);
         visitedSource.add(sourceVertex);
 
@@ -466,7 +470,7 @@ public class Graph {
 
         while (!queueSource.isEmpty() && !queueTarget.isEmpty()) {
 
-            // Explore nodes from the source side
+            // Explore vertices from the source side
             int sourceSize = queueSource.size();
 
             for (int i = 0; i < sourceSize; i++) {
@@ -497,7 +501,7 @@ public class Graph {
 
                 }
 
-                // Explore nodes from the target side
+                // Explore vertices from the target side
                 int targetSize = queueTarget.size();
 
                 for (int j = 0; j < targetSize; j++) {
@@ -570,7 +574,7 @@ public class Graph {
 
         Map<Vertex, Vertex> parents = new HashMap<>();
 
-        // Initialize the g-scores and f-scores for all nodes
+        // Initialize the g-scores and f-scores for all vertices
         for (Vertex vertex : adjVertices.keySet()) {
             gScores.put(vertex, Integer.MAX_VALUE);
             fScores.put(vertex, Integer.MAX_VALUE);
@@ -651,7 +655,7 @@ public class Graph {
 
     public List<Vertex> lexBFS(Vertex startVertex) {
 
-        if(isDirected) {
+        if (isDirected) {
             throw new RuntimeException("Directed graphs not allowed for lexBFS call!");
         }
 
@@ -728,6 +732,67 @@ public class Graph {
             }
         }
 
+    }
+
+    public List<List<Vertex>> findSCCs(int numberOfVertices) {
+
+        index = 0;
+        sccList = new ArrayList<>();
+        sccStack = new Stack<>();
+
+        int[] lowLink = new int[numberOfVertices];
+        int[] indexMap = new int[numberOfVertices];
+        Arrays.fill(indexMap, -1);
+
+        for (Vertex vertex : adjVertices.keySet()) {
+            if (indexMap[vertex.label] == -1) {
+                tarjan(vertex, lowLink, indexMap);
+            }
+        }
+
+        return sccList;
+
+    }
+
+    public void tarjan(Vertex vertex, int[] lowLink, int[] indexMap) {
+
+        lowLink[vertex.label] = index;
+        indexMap[vertex.label] = index;
+        index++;
+        sccStack.push(vertex);
+
+        for (Vertex u : adjVertices.keySet()) {
+
+            if (Objects.equals(u.label, vertex.label)) {
+
+                for (Vertex w : adjVertices.get(u)) {
+
+                    if (indexMap[w.label] == -1) {
+                        tarjan(w, lowLink, indexMap);
+                        lowLink[vertex.label] = Math.min(lowLink[vertex.label], lowLink[w.label]);
+                    } else if (sccStack.contains(w)) {
+                        lowLink[vertex.label] = Math.min(lowLink[vertex.label], indexMap[w.label]);
+                    }
+
+                }
+
+            }
+
+        }
+
+        if (lowLink[vertex.label] == indexMap[vertex.label]) {
+
+            List<Vertex> scc = new ArrayList<>();
+            Vertex poppedVertex;
+
+            do {
+                poppedVertex = sccStack.pop();
+                scc.add(poppedVertex);
+            } while (poppedVertex != vertex);
+
+            sccList.add(scc);
+
+        }
     }
 
 }

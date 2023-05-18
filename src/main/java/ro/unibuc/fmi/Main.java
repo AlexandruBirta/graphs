@@ -8,8 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-
-import java.util.*;
+import java.util.List;
 
 
 public class Main {
@@ -21,7 +20,7 @@ public class Main {
 
             Graph graph = new Graph();
             graph.setWeighted(false);
-            graph.setDirected(false);
+            graph.setDirected(true);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
@@ -130,15 +129,29 @@ public class Main {
 
             //lexDFS**********************************************************************
 
-            Vertex sourceVertex = new Vertex(0); // Choose the source node
-            List<Vertex> ordering = graph.lexDFS(sourceVertex);
+//            Vertex sourceVertex = new Vertex(0); // Choose the source node
+//            List<Vertex> ordering = graph.lexDFS(sourceVertex);
+//
+//            System.out.println("Lexicographic DFS Ordering:");
+//            for (Vertex vertex : ordering) {
+//                System.out.println(vertex.label);
+//            }
 
-            System.out.println("Lexicographic DFS Ordering:");
-            for (Vertex vertex : ordering) {
-                System.out.println(vertex.label);
+            //Tarjan**********************************************************************
+
+
+            List<List<Vertex>> sccList = graph.findSCCs(numberOfVertices);
+
+            System.out.println("Strongly Connected Components:");
+            for (List<Vertex> scc : sccList) {
+                System.out.println("List is: " + scc);
+                for (Vertex vertex : scc) {
+                    System.out.print(vertex.label + " ");
+                }
+                System.out.println('\n');
             }
-            
-            
+
+
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();

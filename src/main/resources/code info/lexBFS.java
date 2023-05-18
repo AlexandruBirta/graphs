@@ -12,7 +12,9 @@
 
 import java.util.*;
 
+
 class Node {
+
     int id;
     List<Node> neighbors;
 
@@ -20,9 +22,11 @@ class Node {
         this.id = id;
         this.neighbors = new ArrayList<>();
     }
+
 }
 
 public class LexBFS {
+
     public static void main(String[] args) {
         // Build your graph
         List<Node> graph = buildGraph();
@@ -101,4 +105,5 @@ public class LexBFS {
 
         return graph;
     }
+
 }

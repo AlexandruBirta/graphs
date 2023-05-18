@@ -1,5 +1,4 @@
-
-// The Hash Distributed A* algorithm is a parallelized version of the A* algorithm that distributes the search workload across multiple processors or threads using a hash-based partitioning strategy. 
+// The Hash Distributed A* algorithm is a parallelized version of the A* algorithm that distributes the search workload across multiple processors or threads using a hash-based partitioning strategy.
 // Here's an implementation of the Hash Distributed A* algorithm for adjacency list-based graphs in Java:
 // In this implementation, the Hash Distributed A* algorithm distributes the search workload by using a hash-based partitioning strategy. Each node is assigned to a specific processor or thread based on its hash value. The algorithm uses a priority queue (openSet) to store the nodes to be expanded, and a set (closedSet) to keep track of the visited nodes.
 
@@ -17,7 +16,9 @@
 
 import java.util.*;
 
+
 class Node {
+
     int id;
     List<Edge> neighbors;
 
@@ -25,9 +26,11 @@ class Node {
         this.id = id;
         this.neighbors = new ArrayList<>();
     }
+
 }
 
 class Edge {
+
     Node target;
     int weight;
 
@@ -35,9 +38,11 @@ class Edge {
         this.target = target;
         this.weight = weight;
     }
+
 }
 
 class State implements Comparable<State> {
+
     Node node;
     int gScore;
     int fScore;
@@ -52,9 +57,11 @@ class State implements Comparable<State> {
     public int compareTo(State other) {
         return Integer.compare(this.fScore, other.fScore);
     }
+
 }
 
 public class HashDistributedAStar {
+
     public static void main(String[] args) {
         // Build your graph
         List<Node> graph = buildGraph();
@@ -188,4 +195,5 @@ public class HashDistributedAStar {
 
         return graph;
     }
+
 }

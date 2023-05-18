@@ -1,6 +1,6 @@
-// In this implementation, the B heuristic algorithm starts from both the source node and the target node and explores their respective neighbors simultaneously. The algorithm stops when the exploration from both sides meets at an intersection point, indicating the presence of a path.
+// In this implementation, the Bidirectional Search algorithm starts from both the source node and the target node and explores their respective neighbors simultaneously. The algorithm stops when the exploration from both sides meets at an intersection point, indicating the presence of a path.
 
-// The bHeuristicSearch function takes the graph, the source node, and the target node as input and performs the B heuristic search. It maintains separate visited sets, queues, and parent maps for the source and target sides. The algorithm iterates until either of the queues becomes empty or an intersection point is found. It explores the neighbors of the current nodes on both sides, enqueues them if they haven't been visited, and updates the parent maps accordingly. If an intersection is found, the path is reconstructed using the intersection node and the parent maps.
+// The bidirectionalSearch function takes the graph, the source node, and the target node as input and performs the bidirectional search. It maintains separate visited sets, queues, and parent maps for the source and target sides. The algorithm iterates until either of the queues becomes empty or an intersection point is found. It explores the neighbors of the current nodes on both sides, enqueues them if they haven't been visited, and updates the parent maps accordingly. If an intersection is found, the path is reconstructed using the intersection node and the parent maps.
 
 // The reconstructPath function is used to reconstruct the path from the source node to the target node using the intersection node and the parent maps. It traces back the path from the intersection node to the source node and from the intersection node to the target node, combining them into a single path.
 
@@ -10,9 +10,12 @@
 
 // Please note that this implementation assumes an undirected graph, where each edge is represented as a connection between two nodes in both directions. Modify the code accordingly if you are working with a directed graph or if your graph structure differs.
 
+
 import java.util.*;
 
+
 class Node {
+
     int id;
     List<Node> neighbors;
 
@@ -20,9 +23,11 @@ class Node {
         this.id = id;
         this.neighbors = new ArrayList<>();
     }
+
 }
 
 public class BHeuristicSearch {
+
     public static void main(String[] args) {
         // Build your graph
         List<Node> graph = buildGraph();
@@ -111,35 +116,3 @@ public class BHeuristicSearch {
             currentNode = parentsTarget.get(currentNode);
         }
 
-        return path;
-    }
-
-    public static List<Node> buildGraph() {
-        // Build your graph here
-        List<Node> graph = new ArrayList<>();
-
-        // Add nodes and their neighbors
-        Node node0 = new Node(0);
-        Node node1 = new Node(1);
-        Node node2 = new Node(2);
-        Node node3 = new Node(3);
-        Node node4 = new Node(4);
-
-        node0.neighbors.add(node1);
-        node1.neighbors.add(node0);
-        node1.neighbors.add(node2);
-        node2.neighbors.add(node1);
-        node2.neighbors.add(node3);
-        node3.neighbors.add(node2);
-        node3.neighbors.add(node4);
-        node4.neighbors.add(node3);
-
-        graph.add(node0);
-        graph.add(node1);
-        graph.add(node2);
-        graph.add(node3);
-        graph.add(node4);
-
-        return graph;
-    }
-}

@@ -21,6 +21,7 @@ public class Edge {
     public void setDestinationVertex(Vertex destinationVertex) {
         this.destinationVertex = destinationVertex;
     }
+
     public Vertex getDestinationVertex() {
         return destinationVertex;
     }
@@ -28,6 +29,7 @@ public class Edge {
     public void setSourceVertex(Vertex sourceVertex) {
         this.sourceVertex = sourceVertex;
     }
+
     public Vertex getSourceVertex() {
         return sourceVertex;
     }

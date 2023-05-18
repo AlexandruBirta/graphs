@@ -190,19 +190,29 @@ public class Main {
             //Coloring**********************************************************************
 
 
-            int numColors = 3; // Number of colors available
+//            int numColors = 3; // Number of colors available
+//
+//            boolean isColoringPossible = graph.colorGraph(numColors);
+//
+//            if (isColoringPossible) {
+//                System.out.println("Graph can be colored with " + numColors + " colors.");
+//                System.out.println("Coloring result:");
+//                for (Vertex vertex : graph.getAdjVertices().keySet()) {
+//                    System.out.println("Vertex " + vertex.label + ": Color " + vertex.getColor());
+//                }
+//            } else {
+//                System.out.println("Graph cannot be colored with " + numColors + " colors.");
+//            }
 
-            boolean isColoringPossible = graph.colorGraph(numColors);
+            //Euler Tour**********************************************************************
 
-            if (isColoringPossible) {
-                System.out.println("Graph can be colored with " + numColors + " colors.");
-                System.out.println("Coloring result:");
-                for (Vertex vertex : graph.getAdjVertices().keySet()) {
-                    System.out.println("Vertex " + vertex.label + ": Color " + vertex.getColor());
-                }
-            } else {
-                System.out.println("Graph cannot be colored with " + numColors + " colors.");
+            List<Vertex> eulerTour = graph.findEulerTour(new Vertex(0));
+
+            System.out.println("Euler Tour:");
+            for (Vertex vertex : eulerTour) {
+                System.out.print(vertex.label + " ");
             }
+            
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

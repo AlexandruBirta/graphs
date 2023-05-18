@@ -1147,4 +1147,37 @@ public class Graph {
         return true;
     }
 
+    public List<Vertex> findEulerTour(Vertex startVertex) {
+
+        List<Vertex> eulerTour = new ArrayList<>();
+
+        Stack<Vertex> vertexStack = new Stack<>();
+
+        vertexStack.push(startVertex);
+
+        while (!vertexStack.isEmpty()) {
+
+            Vertex current = vertexStack.peek();
+
+            for (Vertex u : adjVertices.keySet()) {
+
+                if (Objects.equals(u.label, current.label)) {
+
+                        if (!adjVertices.get(current).isEmpty()) {
+                            Vertex next = adjVertices.get(current).remove(0);
+                            adjVertices.get(next).remove(current);
+                            vertexStack.push(next);
+                        } else {
+                            eulerTour.add(vertexStack.pop());
+                        }
+
+                }
+
+            }
+
+        }
+
+        return eulerTour;
+    }
+    
 }

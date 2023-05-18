@@ -39,6 +39,10 @@ public class Graph {
         this.isWeighted = isWeighted;
     }
 
+    public Map<Vertex, Map<Vertex, Double>> getWeights() {
+        return weights;
+    }
+
     public void addVertex(Integer label) {
         adjVertices.putIfAbsent(new Vertex(label), new ArrayList<>());
     }
@@ -794,5 +798,65 @@ public class Graph {
 
         }
     }
+
+    public List<Edge> findMinimumSpanningTree(int startVertexLabel) {
+
+        if(!isWeighted) {
+            throw new RuntimeException("Graph must be weighted for Prim's minimum spanning tree algorithm!");
+        }
+
+        List<Edge> mst = new ArrayList<>();
+        Set<Vertex> visited = new HashSet<>();
+        PriorityQueue<Edge> pq = new PriorityQueue<>(Comparator.comparingDouble(e -> weights.get(e.getSourceVertex()).get(e.getDestinationVertex())));
+
+        Vertex startVertex = new Vertex(startVertexLabel); // Choose the start node
+        visited.add(startVertex);
+
+
+        for (Vertex u : adjVertices.keySet()) {
+
+            if (Objects.equals(u.label, startVertex.label)) {
+
+                for (Vertex w : adjVertices.get(u)) {
+                    pq.add(new Edge(u, w));
+                }
+
+            }
+
+        }
+
+        while (!pq.isEmpty()) {
+
+            Edge minEdge = pq.poll();
+            Vertex destVertex = minEdge.destinationVertex;
+
+            if (!visited.contains(destVertex)) {
+
+                mst.add(minEdge);
+                visited.add(destVertex);
+
+                for (Vertex u : adjVertices.keySet()) {
+
+                    if (Objects.equals(u.label, destVertex.label)) {
+
+                        for (Vertex w : adjVertices.get(u)) {
+
+                            if (!visited.contains(w)) {
+                                pq.add(new Edge(u, w));
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        return mst;
+    }
+
 
 }

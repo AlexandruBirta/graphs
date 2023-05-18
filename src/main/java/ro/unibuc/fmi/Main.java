@@ -1,6 +1,7 @@
 package ro.unibuc.fmi;
 
 
+import ro.unibuc.fmi.graph.Edge;
 import ro.unibuc.fmi.graph.Graph;
 import ro.unibuc.fmi.graph.Vertex;
 
@@ -19,8 +20,8 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Facultate\\UNIBUC\\Materii\\Anul II\\Semestrul II\\Tehnici Avansate de Programare\\Examen\\graphs\\src\\main\\resources\\input.txt"))) {
 
             Graph graph = new Graph();
-            graph.setWeighted(false);
-            graph.setDirected(true);
+            graph.setWeighted(true);
+            graph.setDirected(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
 
@@ -139,16 +140,26 @@ public class Main {
 
             //Tarjan**********************************************************************
 
+//
+//            List<List<Vertex>> sccList = graph.findSCCs(numberOfVertices);
+//
+//            System.out.println("Strongly Connected Components:");
+//            for (List<Vertex> scc : sccList) {
+//                System.out.println("List is: " + scc);
+//                for (Vertex vertex : scc) {
+//                    System.out.print(vertex.label + " ");
+//                }
+//                System.out.println('\n');
+//            }
 
-            List<List<Vertex>> sccList = graph.findSCCs(numberOfVertices);
+            //Spanning Tree Prim's algo**********************************************************************
 
-            System.out.println("Strongly Connected Components:");
-            for (List<Vertex> scc : sccList) {
-                System.out.println("List is: " + scc);
-                for (Vertex vertex : scc) {
-                    System.out.print(vertex.label + " ");
-                }
-                System.out.println('\n');
+
+            List<Edge> mst = graph.findMinimumSpanningTree(0);
+
+            System.out.println("Minimum Spanning Tree:");
+            for (Edge edge : mst) {
+                System.out.println(edge.getSourceVertex() + " -- " + edge.getDestinationVertex() + " : " + graph.getWeights().get(edge.getSourceVertex()).get(edge.getDestinationVertex()));
             }
 
 

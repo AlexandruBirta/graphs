@@ -175,7 +175,17 @@ public class Main {
 
             //Bitmap BFS**********************************************************************
 
-            graph.bitmapBFS(numberOfVertices, 0);
+//            graph.bitmapBFS(numberOfVertices, 0);
+
+            //UFSCC**********************************************************************
+
+
+            List<List<Integer>> scc = graph.findStronglyConnectedComponents(numberOfVertices);
+
+            System.out.println("Strongly Connected Components:");
+            for (List<Integer> component : scc) {
+                System.out.println(component);
+            }
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

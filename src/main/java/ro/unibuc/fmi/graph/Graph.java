@@ -17,6 +17,17 @@ public class Graph {
     private List<List<Vertex>> sccList;
     private Stack<Vertex> sccStack;
 
+
+    //UFSCC
+    private int idCounter;
+    private int[] ids;
+    private int[] lowLinkValues;
+    private boolean[] onStack;
+    private Stack<Integer> stack;
+    private List<List<Integer>> strongComponents;
+    //UFSCC
+
+
     public Graph() {
         this.adjVertices = new HashMap<>();
         this.isWeighted = false;
@@ -801,7 +812,7 @@ public class Graph {
 
     public List<Edge> findMinimumSpanningTree(int startVertexLabel) {
 
-        if(!isWeighted) {
+        if (!isWeighted) {
             throw new RuntimeException("Graph must be weighted for Prim's minimum spanning tree algorithm!");
         }
 
@@ -874,24 +885,22 @@ public class Graph {
         while (processorQueue[processorId] != -1) {
             int currentVertex = processorQueue[processorId];
 
-                for (Vertex u : adjVertices.keySet()) {
+            for (Vertex u : adjVertices.keySet()) {
 
-                    if (Objects.equals(u.label, currentVertex)) {
+                if (Objects.equals(u.label, currentVertex)) {
 
-                        for (Vertex w : adjVertices.get(u)) {
+                    for (Vertex w : adjVertices.get(u)) {
 
-                            int neighborId = w.label;
+                        int neighborId = w.label;
 
-                            if (level[neighborId] == -1) {
-                                level[neighborId] = level[currentVertex] + 1;
-                                int nextProcessorId = neighborId % numProcessors;
+                        if (level[neighborId] == -1) {
+                            level[neighborId] = level[currentVertex] + 1;
+                            int nextProcessorId = neighborId % numProcessors;
+                            nextProcessorQueue[nextProcessorId] = neighborId;
+
+                            // Simulate message passing by updating the next processor's queue
+                            if (nextProcessorId != processorId) {
                                 nextProcessorQueue[nextProcessorId] = neighborId;
-
-                                // Simulate message passing by updating the next processor's queue
-                                if (nextProcessorId != processorId) {
-                                    nextProcessorQueue[nextProcessorId] = neighborId;
-                                }
-
                             }
 
                         }
@@ -899,6 +908,8 @@ public class Graph {
                     }
 
                 }
+
+            }
 
 
             processorQueue[processorId] = -1; // Mark the current processor's queue as empty
@@ -1029,6 +1040,74 @@ public class Graph {
         System.out.println("Vertex Levels:");
         for (int i = 0; i < numberOfVertices; i++) {
             System.out.println("Vertex " + i + ": Level " + level[i]);
+        }
+
+    }
+
+    public List<List<Integer>> findStronglyConnectedComponents(int numberOfVertices) {
+
+        if(isWeighted || isDirected) {
+            throw new RuntimeException("Cannot perform UFSCC on directed or weighted graphs!");
+        }
+
+        idCounter = 0;
+        ids = new int[numberOfVertices];
+        lowLinkValues = new int[numberOfVertices];
+        onStack = new boolean[numberOfVertices];
+        stack = new Stack<>();
+        strongComponents = new ArrayList<>();
+
+        Arrays.fill(ids, -1);
+
+        for (int i = 0; i < numberOfVertices; i++) {
+            if (ids[i] == -1) {
+                dfs(i);
+            }
+        }
+
+        return strongComponents;
+    }
+
+    public void dfs(int vertexIndex) {
+
+        ids[vertexIndex] = idCounter;
+        lowLinkValues[vertexIndex] = idCounter;
+        idCounter++;
+        stack.push(vertexIndex);
+        onStack[vertexIndex] = true;
+
+        for (Vertex u : adjVertices.keySet()) {
+
+            if (Objects.equals(u.label, vertexIndex)) {
+
+                for (Vertex w : adjVertices.get(u)) {
+
+                    int neighborIndex = w.label;
+
+                    if (ids[neighborIndex] == -1) {
+                        dfs(neighborIndex);
+                        lowLinkValues[vertexIndex] = Math.min(lowLinkValues[vertexIndex], lowLinkValues[neighborIndex]);
+                    } else if (onStack[neighborIndex]) {
+                        lowLinkValues[vertexIndex] = Math.min(lowLinkValues[vertexIndex], ids[neighborIndex]);
+                    }
+
+                }
+
+            }
+
+        }
+
+        if (lowLinkValues[vertexIndex] == ids[vertexIndex]) {
+            List<Integer> component = new ArrayList<>();
+            int indexComponent;
+
+            do {
+                indexComponent = stack.pop();
+                onStack[indexComponent] = false;
+                component.add(indexComponent);
+            } while (indexComponent != vertexIndex);
+
+            strongComponents.add(component);
         }
 
     }

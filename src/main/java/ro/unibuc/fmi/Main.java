@@ -2,7 +2,6 @@ package ro.unibuc.fmi;
 
 
 import ro.unibuc.fmi.graph.Graph;
-import ro.unibuc.fmi.graph.Vertex;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -36,7 +35,7 @@ public class Main {
                 String[] edge = reader.readLine().trim().split("\\s+");
 
                 if (graph.isWeighted()) {
-                    graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Double.parseDouble(String.valueOf(edge[2])));
+                    graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]), Integer.parseInt(String.valueOf(edge[2])));
                 } else {
                     graph.addEdge(Integer.parseInt(edge[0]), Integer.parseInt(edge[1]));
                 }

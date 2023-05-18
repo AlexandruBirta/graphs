@@ -7,7 +7,7 @@ import java.util.*;
 public class Graph {
 
     private final Map<Vertex, List<Vertex>> adjVertices;
-    private final Map<Vertex, Map<Vertex, Double>> weights = new HashMap<>();
+    private final Map<Vertex, Map<Vertex, Integer>> weights = new HashMap<>();
 
     private boolean isDirected;
 
@@ -22,7 +22,6 @@ public class Graph {
     public Map<Vertex, List<Vertex>> getAdjVertices() {
         return adjVertices;
     }
-
 
     public boolean isDirected() {
         return isDirected;
@@ -40,7 +39,7 @@ public class Graph {
         this.isWeighted = isWeighted;
     }
 
-    public Map<Vertex, Map<Vertex, Double>> getWeights() {
+    public Map<Vertex, Map<Vertex, Integer>> getWeights() {
         return weights;
     }
 
@@ -49,12 +48,15 @@ public class Graph {
     }
 
     public void removeVertex(Integer label) {
+
         Vertex v = new Vertex(label);
         adjVertices.values().forEach(e -> e.remove(v));
         adjVertices.remove(new Vertex(label));
+
     }
 
-    public void addEdge(Integer label1, Integer label2, double weight) {
+    public void addEdge(Integer label1, Integer label2, int weight) {
+
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
@@ -64,9 +66,11 @@ public class Graph {
         }
 
         setWeight(v1, v2, weight);
+
     }
 
     public void addEdge(Integer label1, Integer label2) {
+
         Vertex v1 = new Vertex(label1);
         Vertex v2 = new Vertex(label2);
         adjVertices.get(v1).add(v2);
@@ -77,12 +81,14 @@ public class Graph {
 
     }
 
-    private void setWeight(Vertex one, Vertex two, double weight) {
+    private void setWeight(Vertex one, Vertex two, int weight) {
+
         weights.computeIfAbsent(one, key -> new HashMap<>());
         weights.computeIfAbsent(two, key -> new HashMap<>());
 
         weights.get(one).put(two, weight);
         weights.get(two).put(one, weight);
+
     }
 
     public void removeEdge(Integer label1, Integer label2) {
@@ -144,7 +150,7 @@ public class Graph {
 
     public List<Integer> findShortestPath(int startVertex, int goalVertex, int numProcessors, int numberOfVertices) {
 
-        if(!isWeighted) {
+        if (!isWeighted) {
             throw new RuntimeException("Hash Distributed A* cannot run on un-weighted graphs!");
         }
 
@@ -184,7 +190,7 @@ public class Graph {
                     for (Vertex neighbor : adjVertices.get(vertex)) {
 
                         int neighborVertex = neighbor.label;
-                        int neighborCost = (int) (currentCost + weights.get(vertex).get(neighbor));
+                        int neighborCost = currentCost + weights.get(vertex).get(neighbor);
                         List<Integer> newPath = new ArrayList<>(currentState.path);
                         newPath.add(neighborVertex);
 

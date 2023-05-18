@@ -991,4 +991,46 @@ public class Graph {
 
     }
 
+    public void bitmapBFS(int numberOfVertices, int startVertex) {
+
+        int[] level = new int[numberOfVertices];
+        boolean[] visited = new boolean[numberOfVertices];
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(startVertex);
+        visited[startVertex] = true;
+
+        while (!queue.isEmpty()) {
+
+            int currentVertex = queue.poll();
+
+            for (Vertex u : adjVertices.keySet()) {
+
+                if (Objects.equals(u.label, currentVertex)) {
+
+                    for (Vertex w : adjVertices.get(u)) {
+
+                        int neighborId = w.label;
+
+                        if (!visited[neighborId]) {
+                            level[neighborId] = level[currentVertex] + 1;
+                            visited[neighborId] = true;
+                            queue.offer(neighborId);
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+        System.out.println("Vertex Levels:");
+        for (int i = 0; i < numberOfVertices; i++) {
+            System.out.println("Vertex " + i + ": Level " + level[i]);
+        }
+
+    }
+
 }

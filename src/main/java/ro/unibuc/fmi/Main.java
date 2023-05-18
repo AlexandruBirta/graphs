@@ -170,8 +170,12 @@ public class Main {
             //PDFS 1-D**********************************************************************
 
 
-            graph.pdfsOneDimensional(numberOfVertices);
+//            graph.pdfsOneDimensional(numberOfVertices);
 
+
+            //Bitmap BFS**********************************************************************
+
+            graph.bitmapBFS(numberOfVertices, 0);
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

@@ -1066,14 +1066,14 @@ public class Graph {
 
         for (int i = 0; i < numberOfVertices; i++) {
             if (ids[i] == -1) {
-                dfs(i);
+                eulerDFS(i);
             }
         }
 
         return strongComponents;
     }
 
-    public void dfs(int vertexIndex) {
+    public void eulerDFS(int vertexIndex) {
 
         ids[vertexIndex] = idCounter;
         lowLinkValues[vertexIndex] = idCounter;
@@ -1090,7 +1090,7 @@ public class Graph {
                     int neighborIndex = w.label;
 
                     if (ids[neighborIndex] == -1) {
-                        dfs(neighborIndex);
+                        eulerDFS(neighborIndex);
                         lowLinkValues[vertexIndex] = Math.min(lowLinkValues[vertexIndex], lowLinkValues[neighborIndex]);
                     } else if (onStack[neighborIndex]) {
                         lowLinkValues[vertexIndex] = Math.min(lowLinkValues[vertexIndex], ids[neighborIndex]);
@@ -1178,6 +1178,33 @@ public class Graph {
         }
 
         return eulerTour;
+    }
+
+
+    public List<Vertex> findEulerTourWithDoubling() {
+
+        List<Vertex> eulerTour = new ArrayList<>();
+
+        // Perform depth-first search
+        doublingEulerDFS(new Vertex(0), eulerTour);
+
+        return eulerTour;
+
+    }
+
+    private void doublingEulerDFS(Vertex vertex, List<Vertex> eulerTour) {
+
+        while (!adjVertices.get(vertex).isEmpty()) {
+
+            Vertex next = adjVertices.get(vertex).remove(0);
+            // Remove the back edge
+            adjVertices.get(next).remove(vertex);
+            doublingEulerDFS(next, eulerTour);
+
+        }
+
+        eulerTour.add(vertex);
+
     }
     
 }

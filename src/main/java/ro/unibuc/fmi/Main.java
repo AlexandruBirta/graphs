@@ -206,13 +206,23 @@ public class Main {
 
             //Euler Tour**********************************************************************
 
-            List<Vertex> eulerTour = graph.findEulerTour(new Vertex(0));
+//            List<Vertex> eulerTour = graph.findEulerTour(new Vertex(0));
+//
+//            System.out.println("Euler Tour:");
+//            for (Vertex vertex : eulerTour) {
+//                System.out.print(vertex.label + " ");
+//            }
+
+            //Doubling Euler Tour**********************************************************************
+
+
+            List<Vertex> eulerTour = graph.findEulerTourWithDoubling();
 
             System.out.println("Euler Tour:");
+
             for (Vertex vertex : eulerTour) {
                 System.out.print(vertex.label + " ");
             }
-            
 
         } catch (FileNotFoundException e) {
             System.out.println("An error occurred.");

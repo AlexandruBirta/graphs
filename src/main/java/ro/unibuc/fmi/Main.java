@@ -20,7 +20,7 @@ public class Main {
         try (BufferedReader reader = new BufferedReader(new FileReader("D:\\Facultate\\UNIBUC\\Materii\\Anul II\\Semestrul II\\Tehnici Avansate de Programare\\Examen\\graphs\\src\\main\\resources\\input.txt"))) {
 
             Graph graph = new Graph();
-            graph.setWeighted(true);
+            graph.setWeighted(false);
             graph.setDirected(false);
 
             String[] graphProperties = reader.readLine().trim().split("\\s+");
@@ -155,12 +155,17 @@ public class Main {
             //Spanning Tree Prim's algo**********************************************************************
 
 
-            List<Edge> mst = graph.findMinimumSpanningTree(0);
+//            List<Edge> mst = graph.findMinimumSpanningTree(0);
+//
+//            System.out.println("Minimum Spanning Tree:");
+//            for (Edge edge : mst) {
+//                System.out.println(edge.getSourceVertex() + " -- " + edge.getDestinationVertex() + " : " + graph.getWeights().get(edge.getSourceVertex()).get(edge.getDestinationVertex()));
+//            }
 
-            System.out.println("Minimum Spanning Tree:");
-            for (Edge edge : mst) {
-                System.out.println(edge.getSourceVertex() + " -- " + edge.getDestinationVertex() + " : " + graph.getWeights().get(edge.getSourceVertex()).get(edge.getDestinationVertex()));
-            }
+            //PBFS 1-D**********************************************************************
+
+
+            graph.pbfsOneDimensional(numberOfVertices);
 
 
         } catch (FileNotFoundException e) {

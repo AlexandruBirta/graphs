@@ -858,5 +858,66 @@ public class Graph {
         return mst;
     }
 
+    public void pbfsOneDimensional(int numberOfVertices) {
+
+        int numProcessors = 4; // Number of processors
+        int[] processorQueue = new int[numProcessors];
+        int[] nextProcessorQueue = new int[numProcessors];
+
+        int[] level = new int[numberOfVertices];
+        Arrays.fill(level, -1);
+        level[0] = 0; // Start node at level 0
+
+        int processorId = 0;
+        processorQueue[processorId] = 0; // Start node in the first processor's queue
+
+        while (processorQueue[processorId] != -1) {
+            int currentVertex = processorQueue[processorId];
+
+                for (Vertex u : adjVertices.keySet()) {
+
+                    if (Objects.equals(u.label, currentVertex)) {
+
+                        for (Vertex w : adjVertices.get(u)) {
+
+                            int neighborId = w.label;
+
+                            if (level[neighborId] == -1) {
+                                level[neighborId] = level[currentVertex] + 1;
+                                int nextProcessorId = neighborId % numProcessors;
+                                nextProcessorQueue[nextProcessorId] = neighborId;
+
+                                // Simulate message passing by updating the next processor's queue
+                                if (nextProcessorId != processorId) {
+                                    nextProcessorQueue[nextProcessorId] = neighborId;
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+
+            processorQueue[processorId] = -1; // Mark the current processor's queue as empty
+
+            // Simulate message passing by updating the current processor's queue
+            if (processorId != nextProcessorQueue[processorId] % numProcessors) {
+                processorQueue[processorId] = nextProcessorQueue[processorId];
+            }
+
+            // Switch to the next processor
+            processorId = (processorId + 1) % numProcessors;
+
+        }
+
+        System.out.println("Vertex Levels:");
+        for (int i = 0; i < numberOfVertices; i++) {
+            System.out.println("Vertex " + i + ": Level " + level[i]);
+        }
+
+    }
 
 }

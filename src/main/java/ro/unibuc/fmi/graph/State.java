@@ -1,37 +1,36 @@
 package ro.unibuc.fmi.graph;
 
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 
 class State implements Comparable<State> {
+    int vertex;
+    int cost;
+    int heuristic;
+    List<Integer> path;
 
-    Vertex vertex;
-    int gScore;
-    int fScore;
-
-    public State(Vertex vertex, int gScore, int fScore) {
+    public State(int vertex, int cost, int heuristic) {
         this.vertex = vertex;
-        this.gScore = gScore;
-        this.fScore = fScore;
+        this.cost = cost;
+        this.heuristic = heuristic;
+        this.path = new ArrayList<>();
+        this.path.add(vertex);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        State state = (State) o;
-        return gScore == state.gScore && fScore == state.fScore && Objects.equals(vertex, state.vertex);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(vertex, gScore, fScore);
+    public State(int vertex, int cost, int heuristic, List<Integer> path) {
+        this.vertex = vertex;
+        this.cost = cost;
+        this.heuristic = heuristic;
+        this.path = path;
     }
 
     @Override
     public int compareTo(State other) {
-        return Integer.compare(this.fScore, other.fScore);
+        int totalCost = cost + heuristic;
+        int otherTotalCost = other.cost + other.heuristic;
+        return Integer.compare(totalCost, otherTotalCost);
     }
 
 }

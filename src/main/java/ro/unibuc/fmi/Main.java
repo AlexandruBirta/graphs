@@ -47,6 +47,7 @@ public class Main {
 
             // Print created graph
             System.out.println("Graph from input file:\n" + graph.printGraph());
+            System.out.println("Edges of graph:\n" + graph.printEdges());
 
             // Specify the start and goal vertices
             int startVertex = 0;

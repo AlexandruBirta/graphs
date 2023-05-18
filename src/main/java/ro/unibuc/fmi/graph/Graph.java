@@ -34,6 +34,11 @@ public class Graph {
         this.isDirected = false;
     }
 
+    public Map<Vertex, List<Vertex>> getAdjVertices() {
+        return adjVertices;
+    }
+
+
     public boolean isDirected() {
         return isDirected;
     }
@@ -110,7 +115,7 @@ public class Graph {
 
     }
 
-    public List<Vertex> getAdjVertices(Integer label) {
+    public List<Vertex> getAdjVerticesOfVertex(Integer label) {
         return adjVertices.get(new Vertex(label));
     }
 
@@ -167,7 +172,7 @@ public class Graph {
 
                 visited.add(vertex);
 
-                for (Vertex v : graph.getAdjVertices(vertex)) {
+                for (Vertex v : graph.getAdjVerticesOfVertex(vertex)) {
                     stack.push(v.label);
                 }
 
@@ -191,7 +196,7 @@ public class Graph {
 
             Integer vertex = queue.poll();
 
-            for (Vertex v : graph.getAdjVertices(vertex)) {
+            for (Vertex v : graph.getAdjVerticesOfVertex(vertex)) {
 
                 if (!visited.contains(v.label)) {
                     visited.add(v.label);
@@ -1046,7 +1051,7 @@ public class Graph {
 
     public List<List<Integer>> findStronglyConnectedComponents(int numberOfVertices) {
 
-        if(isWeighted || isDirected) {
+        if (isWeighted || isDirected) {
             throw new RuntimeException("Cannot perform UFSCC on directed or weighted graphs!");
         }
 
@@ -1110,6 +1115,36 @@ public class Graph {
             strongComponents.add(component);
         }
 
+    }
+
+    public boolean colorGraph(int numColors) {
+
+        for (Vertex vertex : adjVertices.keySet()) {
+
+            Set<Integer> usedColors = new HashSet<>();
+
+            for (Vertex w : adjVertices.get(vertex)) {
+
+                if (w.color != -1) {
+                    usedColors.add(w.color);
+                }
+
+            }
+
+            for (int color = 0; color < numColors; color++) {
+                if (!usedColors.contains(color)) {
+                    vertex.color = color;
+                    break;
+                }
+            }
+
+            if (vertex.color == -1) {
+                return false; // Unable to color the graph with the given number of colors
+            }
+
+        }
+
+        return true;
     }
 
 }

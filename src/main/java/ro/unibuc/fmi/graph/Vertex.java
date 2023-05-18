@@ -11,6 +11,9 @@ public class Vertex implements Comparable {
     double g;
     double h;
     double f;
+
+    int color;
+
     Vertex parent;
 
     public Vertex(Integer label) {
@@ -20,6 +23,15 @@ public class Vertex implements Comparable {
         this.h = 0;
         this.f = 0;
         this.parent = null;
+        this.color=-1;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     public double getDistance() {

@@ -65,8 +65,8 @@ public class Main {
 //                System.out.println("No path found.");
 //            } else {
 //                System.out.println("Path found!");
-//                for (int node : aStarPath) {
-//                    System.out.println(node);
+//                for (int vertex : aStarPath) {
+//                    System.out.println(vertex);
 //                }
 //            }
 
@@ -89,8 +89,8 @@ public class Main {
 
             //B Heuristic*********************************************************************
 
-//            Vertex sourceVertex = new Vertex(0); // Choose the source node
-//            Vertex targetVertex = new Vertex(4); // Choose the target node
+//            Vertex sourceVertex = new Vertex(0); // Choose the source vertex
+//            Vertex targetVertex = new Vertex(4); // Choose the target vertex
 //            List<Vertex> bHeuristicPath = graph.bHeuristicSearch(sourceVertex, targetVertex);
 //
 //            if (bHeuristicPath.isEmpty()) {
@@ -104,8 +104,8 @@ public class Main {
 
             //Hash A**********************************************************************
 
-//            Vertex sourceVertex = new Vertex(0); // Choose the source node
-//            Vertex targetVertex = new Vertex(4); // Choose the target node
+//            Vertex sourceVertex = new Vertex(0); // Choose the source vertex
+//            Vertex targetVertex = new Vertex(4); // Choose the target vertex
 //            List<Vertex> path = graph.hashDistributedAStar(sourceVertex, targetVertex);
 //
 //            if (path.isEmpty()) {
@@ -120,7 +120,7 @@ public class Main {
             //lexBFS**********************************************************************
 
 
-//            Vertex sourceVertex = new Vertex(0); // Choose the source node
+//            Vertex sourceVertex = new Vertex(0); // Choose the source vertex
 //            List<Vertex> ordering = graph.lexBFS(sourceVertex);
 //
 //            System.out.println("Lexicographic BFS Ordering:");
@@ -130,7 +130,7 @@ public class Main {
 
             //lexDFS**********************************************************************
 
-//            Vertex sourceVertex = new Vertex(0); // Choose the source node
+//            Vertex sourceVertex = new Vertex(0); // Choose the source vertex
 //            List<Vertex> ordering = graph.lexDFS(sourceVertex);
 //
 //            System.out.println("Lexicographic DFS Ordering:");
@@ -180,11 +180,28 @@ public class Main {
             //UFSCC**********************************************************************
 
 
-            List<List<Integer>> scc = graph.findStronglyConnectedComponents(numberOfVertices);
+//            List<List<Integer>> scc = graph.findStronglyConnectedComponents(numberOfVertices);
+//
+//            System.out.println("Strongly Connected Components:");
+//            for (List<Integer> component : scc) {
+//                System.out.println(component);
+//            }
 
-            System.out.println("Strongly Connected Components:");
-            for (List<Integer> component : scc) {
-                System.out.println(component);
+            //Coloring**********************************************************************
+
+
+            int numColors = 3; // Number of colors available
+
+            boolean isColoringPossible = graph.colorGraph(numColors);
+
+            if (isColoringPossible) {
+                System.out.println("Graph can be colored with " + numColors + " colors.");
+                System.out.println("Coloring result:");
+                for (Vertex vertex : graph.getAdjVertices().keySet()) {
+                    System.out.println("Vertex " + vertex.label + ": Color " + vertex.getColor());
+                }
+            } else {
+                System.out.println("Graph cannot be colored with " + numColors + " colors.");
             }
 
         } catch (FileNotFoundException e) {
